@@ -11,7 +11,7 @@ export default defineConfig({
         "/mnt/c/Users/wmike/Downloads/chrome-mv3-dev",
         {
           recursive: true,
-        }
+        },
       );
     },
   },
