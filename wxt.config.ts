@@ -6,7 +6,7 @@ export default defineConfig({
   srcDir: "src",
   modules: ["@wxt-dev/module-react"],
   hooks: {
-    "build:done": async (_wxt, _output) => {
+    "build:done": async () => {
       await cp(
         ".output/chrome-mv3-dev/",
         "/mnt/c/Users/wmike/Downloads/chrome-mv3-dev",
