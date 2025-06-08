@@ -1,9 +1,28 @@
 import { useState } from "react";
 
 import reactLogo from "@/assets/react.svg";
+import { MessageType, StartScrapeMessage } from "@/types/messages";
 
 import "./App.css";
 import wxtLogo from "/wxt.svg";
+
+const queryCurrentTabId = async (): Promise<number | undefined> => {
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  return tab.id;
+};
+
+const handleScrapeStart = async () => {
+  const tabId = await queryCurrentTabId();
+  if (!tabId) {
+    return;
+  }
+
+  const message: StartScrapeMessage = {
+    type: MessageType.SCRAPE_START,
+  };
+
+  browser.tabs.sendMessage(tabId, message);
+};
 
 function App() {
   const [count, setCount] = useState(0);
@@ -27,6 +46,7 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
+      <button onClick={handleScrapeStart}>Start scraping</button>
       <p className="read-the-docs">
         Click on the WXT and React logos to learn more
       </p>
