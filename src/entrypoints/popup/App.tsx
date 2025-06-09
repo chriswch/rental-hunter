@@ -58,10 +58,10 @@ function App() {
 
           {/* Panels */}
           <Tabs fullWidth size="sm" variant="bordered" aria-label="Options">
+            {/* Control Panel */}
             <Tab key="scraper" title="Scraper">
               <Card>
                 <CardBody>
-                  {/* Control Panel */}
                   <Form>
                     <NumberInput
                       label="Number of Posts to Scrape"
@@ -87,6 +87,7 @@ function App() {
                 </CardBody>
               </Card>
             </Tab>
+            {/* Settings Panel */}
             <Tab key="settings" title="Settings">
               <Card>
                 <CardBody>
