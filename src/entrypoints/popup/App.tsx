@@ -1,4 +1,14 @@
-import { Button, Card, CardBody, Spacer, Tab, Tabs } from "@heroui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Form,
+  NumberInput,
+  Spacer,
+  Tab,
+  Tabs,
+} from "@heroui/react";
+import { useState } from "react";
 
 import { MessageType, StartScrapeMessage } from "@/types/messages";
 
@@ -21,9 +31,11 @@ const handleScrapeStart = async () => {
 };
 
 function App() {
+  const [numPosts, setNumPosts] = useState(10);
+
   return (
     <>
-      <div className="min-w-40">
+      <div className="min-w-80">
         <div className="container mx-auto px-4 py-2">
           {/* Header */}
           <div className="flex flex-row justify-center gap-2">
@@ -38,17 +50,32 @@ function App() {
           <Spacer y={6} />
 
           {/* Panels */}
-          <Tabs size="sm" variant="bordered" aria-label="Options">
+          <Tabs fullWidth size="sm" variant="bordered" aria-label="Options">
             <Tab key="scraper" title="Scraper">
               <Card>
                 <CardBody>
-                  <Button
-                    color="primary"
-                    size="sm"
-                    variant="bordered"
-                    onPress={handleScrapeStart}
-                  >
-                    Start scraping
+                  {/* Control Panel */}
+                  <Form>
+                    <NumberInput
+                      label="Number of Posts to Scrape"
+                      name="numPosts"
+                      value={numPosts}
+                      onValueChange={setNumPosts}
+                      isRequired
+                      min={1}
+                      max={100}
+                      errorMessage="Please enter a valid number"
+                      hideStepper
+                      isWheelDisabled
+                      variant="bordered"
+                      radius="sm"
+                    ></NumberInput>
+                  </Form>
+
+                  <Spacer y={2} />
+
+                  <Button color="primary" size="sm" onPress={handleScrapeStart}>
+                    <div className="text-sm">Start scraping</div>
                   </Button>
                 </CardBody>
               </Card>
