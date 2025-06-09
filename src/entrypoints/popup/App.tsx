@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   Form,
+  Input,
   NumberInput,
   Spacer,
   Tab,
@@ -30,8 +31,14 @@ const handleScrapeStart = async () => {
   browser.tabs.sendMessage(tabId, message);
 };
 
+const handleNotionIntegration = () => {
+  console.log("Notion integration");
+};
+
 function App() {
   const [numPosts, setNumPosts] = useState(10);
+  const [notionApiKey, setNotionApiKey] = useState("");
+  const [notionDatabaseId, setNotionDatabaseId] = useState("");
 
   return (
     <>
@@ -82,7 +89,45 @@ function App() {
             </Tab>
             <Tab key="settings" title="Settings">
               <Card>
-                <CardBody></CardBody>
+                <CardBody>
+                  <div className="flex flex-row items-center gap-2">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">N</span>
+                    </div>
+                    <h2 className="text-sm font-bold">Notion Integration</h2>
+                  </div>
+
+                  <Spacer y={2} />
+
+                  <Form>
+                    <Input
+                      label="Notion API Key"
+                      name="notionApiKey"
+                      value={notionApiKey}
+                      onValueChange={setNotionApiKey}
+                      isRequired
+                      variant="bordered"
+                      radius="sm"
+                    ></Input>
+                    <Input
+                      label="Notion Database ID"
+                      name="notionDatabaseId"
+                      value={notionDatabaseId}
+                      onValueChange={setNotionDatabaseId}
+                      isRequired
+                      variant="bordered"
+                      radius="sm"
+                    ></Input>
+                    <Button
+                      fullWidth
+                      color="secondary"
+                      size="sm"
+                      onPress={handleNotionIntegration}
+                    >
+                      <div className="text-sm">Save</div>
+                    </Button>
+                  </Form>
+                </CardBody>
               </Card>
             </Tab>
           </Tabs>
