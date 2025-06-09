@@ -1,3 +1,5 @@
+import { Button } from "@heroui/react";
+
 import { MessageType, StartScrapeMessage } from "@/types/messages";
 
 const queryCurrentTabId = async (): Promise<number | undefined> => {
@@ -21,8 +23,14 @@ const handleScrapeStart = async () => {
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <button onClick={handleScrapeStart}>Start scraping</button>
+      <Button
+        color="primary"
+        size="sm"
+        variant="bordered"
+        onPress={handleScrapeStart}
+      >
+        Start scraping
+      </Button>
     </>
   );
 }
