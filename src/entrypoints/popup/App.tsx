@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Tab, Tabs } from "@heroui/react";
+import { Button, Card, CardBody, Spacer, Tab, Tabs } from "@heroui/react";
 
 import { MessageType, StartScrapeMessage } from "@/types/messages";
 
@@ -26,7 +26,7 @@ function App() {
       <div className="min-w-40">
         <div className="container mx-auto px-4 py-2">
           {/* Header */}
-          <div className="flex flex-row justify-center gap-2 mb-4">
+          <div className="flex flex-row justify-center gap-2">
             <div className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg">
               <span className="text-xl font-bold text-white">FB</span>
             </div>
@@ -35,7 +35,9 @@ function App() {
             </h1>
           </div>
 
-          {/*  */}
+          <Spacer y={6} />
+
+          {/* Panels */}
           <Tabs size="sm" variant="bordered" aria-label="Options">
             <Tab key="scraper" title="Scraper">
               <Card>
