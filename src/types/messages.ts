@@ -22,6 +22,9 @@ export interface BaseMessage {
 // Specific message interfaces
 export interface StartScrapeMessage extends BaseMessage {
   type: MessageType.SCRAPE_START;
+  payload: {
+    numPosts: number;
+  };
 }
 
 export interface ScrapeProgressMessage extends BaseMessage {

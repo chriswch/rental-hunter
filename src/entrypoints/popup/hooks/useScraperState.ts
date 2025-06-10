@@ -22,6 +22,9 @@ export function useScraperState() {
 
       const message: StartScrapeMessage = {
         type: MessageType.SCRAPE_START,
+        payload: {
+          numPosts,
+        },
       };
 
       await browser.tabs.sendMessage(tabId, message);
