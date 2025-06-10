@@ -1,10 +1,22 @@
 import { useState } from "react";
 
 import { MessageType, StartScrapeMessage } from "@/types/messages";
+import {
+  notionApiKey as notionApiKeyStorage,
+  notionDatabaseId as notionDatabaseIdStorage,
+} from "@/utils/storage";
 
 const queryCurrentTabId = async (): Promise<number | undefined> => {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   return tab.id;
+};
+
+const validateNotionSettings = async (): Promise<boolean> => {
+  const [notionApiKey, notionDatabaseId] = await Promise.all([
+    notionApiKeyStorage.getValue(),
+    notionDatabaseIdStorage.getValue(),
+  ]);
+  return !!notionApiKey && !!notionDatabaseId;
 };
 
 export function useScraperState() {
@@ -17,6 +29,12 @@ export function useScraperState() {
       const tabId = await queryCurrentTabId();
       if (!tabId) {
         console.error("No active tab found");
+        return;
+      }
+
+      const isValid = await validateNotionSettings();
+      if (!isValid) {
+        console.error("No Notion API key or database ID found");
         return;
       }
 
