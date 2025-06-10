@@ -1,18 +1,27 @@
 import { Post } from "@/types/posts";
+import { notionApiKey, notionDatabaseId } from "@/utils/storage";
 
 export class NotionSaver {
   private baseUrl: string;
   private headers: Record<string, string>;
   private fbPostsDatabaseId: string;
 
-  constructor() {
+  constructor(apiKey: string, databaseId: string) {
     this.baseUrl = "https://api.notion.com/v1";
     this.headers = {
-      Authorization: `Bearer ${import.meta.env.WXT_NOTION_API_KEY}`,
+      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "Notion-Version": "2022-06-28",
     };
-    this.fbPostsDatabaseId = `${import.meta.env.WXT_NOTION_DATABASE_ID}`;
+    this.fbPostsDatabaseId = databaseId;
+  }
+
+  static async create(): Promise<NotionSaver> {
+    const [apiKey, databaseId] = await Promise.all([
+      notionApiKey.getValue(),
+      notionDatabaseId.getValue(),
+    ]);
+    return new NotionSaver(apiKey, databaseId);
   }
 
   private async saveToNotion(post: Post) {
