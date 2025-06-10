@@ -1,10 +1,10 @@
-import { Message, MessageType } from "@/types/messages";
+import { Message, MessageType, StartScrapeMessage } from "@/types/messages";
 
 import { scrapePosts } from "./scraper";
 
-const handleScrapeStart = () => {
+const handleScrapeStart = (payload: StartScrapeMessage["payload"]) => {
   console.log("Scraping started.");
-  scrapePosts();
+  scrapePosts(payload.numPosts);
 };
 
 export default defineContentScript({
@@ -13,7 +13,7 @@ export default defineContentScript({
     browser.runtime.onMessage.addListener((message: Message) => {
       switch (message.type) {
         case MessageType.SCRAPE_START:
-          handleScrapeStart();
+          handleScrapeStart(message.payload);
           break;
         default:
           break;

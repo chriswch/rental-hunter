@@ -7,6 +7,7 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
     host_permissions: ["https://api.notion.com/*"],
+    permissions: ["storage"],
   },
   hooks: {
     "build:done": async () => {

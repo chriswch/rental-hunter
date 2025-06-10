@@ -4,7 +4,7 @@ import { NotionSaver } from "./notion-saver";
 
 const savePost = async (payload: SavePostMessage["payload"]) => {
   console.log("Saving post:");
-  const notionSaver = new NotionSaver();
+  const notionSaver = await NotionSaver.create();
   await notionSaver.savePost(payload.post);
 };
 
