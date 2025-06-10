@@ -30,7 +30,12 @@ export function SettingsTab() {
 
         <Spacer y={2} />
 
-        <Form>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleNotionIntegration();
+          }}
+        >
           <Input
             label="Notion API Key"
             name="notionApiKey"
@@ -54,9 +59,9 @@ export function SettingsTab() {
             fullWidth
             color="secondary"
             size="sm"
-            onPress={handleNotionIntegration}
             isLoading={isLoading}
             isDisabled={isLoading}
+            type="submit"
           >
             <div className="text-sm">{isLoading ? "Saving..." : "Save"}</div>
           </Button>

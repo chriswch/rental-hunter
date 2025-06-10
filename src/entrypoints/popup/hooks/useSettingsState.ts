@@ -1,5 +1,10 @@
 import { useState } from "react";
 
+import {
+  notionApiKey as notionApiKeyStorage,
+  notionDatabaseId as notionDatabaseIdStorage,
+} from "@/utils/storage";
+
 export function useSettingsState() {
   const [notionApiKey, setNotionApiKey] = useState("");
   const [notionDatabaseId, setNotionDatabaseId] = useState("");
@@ -8,9 +13,8 @@ export function useSettingsState() {
   const handleNotionIntegration = async () => {
     try {
       setIsLoading(true);
-      console.log("Notion integration", { notionApiKey, notionDatabaseId });
-      // TODO: Implement Notion integration logic
-      console.log("Settings saved successfully");
+      await notionApiKeyStorage.setValue(notionApiKey);
+      await notionDatabaseIdStorage.setValue(notionDatabaseId);
     } catch (error) {
       console.error("Failed to save settings:", error);
     } finally {
@@ -21,9 +25,13 @@ export function useSettingsState() {
   // Load settings on hook initialization
   const loadSettings = async () => {
     try {
-      console.log("Loading settings");
-      // TODO: Implement loading settings from storage
-      console.log("Settings loaded successfully");
+      const [notionApiKeyFromStorage, notionDatabaseIdFromStorage] =
+        await Promise.all([
+          notionApiKeyStorage.getValue(),
+          notionDatabaseIdStorage.getValue(),
+        ]);
+      setNotionApiKey(notionApiKeyFromStorage);
+      setNotionDatabaseId(notionDatabaseIdFromStorage);
     } catch (error) {
       console.error("Failed to load settings:", error);
     }
