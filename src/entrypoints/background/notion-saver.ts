@@ -51,11 +51,17 @@ export async function savePostToNotion(post: Post) {
     const headers = await buildRequestHeaders();
     const body = await buildRequestBody(post);
 
-    await fetch(`${baseUrl}/pages`, {
+    const response = await fetch(`${baseUrl}/pages`, {
       method: "POST",
       headers,
       body: JSON.stringify(body),
     });
+
+    const responseBody: {
+      id: string;
+    } = await response.json();
+
+    return responseBody.id;
   } catch (error) {
     console.error("Error saving fb posts to Notion:", error);
   }
