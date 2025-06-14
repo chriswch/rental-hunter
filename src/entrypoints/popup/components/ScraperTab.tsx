@@ -57,9 +57,9 @@ export function ScraperTab() {
                 maximumFractionDigits: 1,
               }}
             />
-            <div className="text-xs text-default-500 mt-1">
+            {/* <div className="text-xs text-default-500">
               {scrapedPostCount} of {totalPostsToScrape} posts scraped
-            </div>
+            </div> */}
           </>
 
           <Button
@@ -71,7 +71,9 @@ export function ScraperTab() {
             isDisabled={isScraping}
           >
             <div className="text-sm">
-              {isScraping ? "Scraping..." : "Start scraping"}
+              {isScraping
+                ? `${scrapedPostCount} of ${totalPostsToScrape} posts scraped`
+                : "Start scraping"}
             </div>
           </Button>
         </Form>
