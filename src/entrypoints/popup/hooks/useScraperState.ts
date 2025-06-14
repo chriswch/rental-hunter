@@ -8,6 +8,8 @@ import {
   totalPostsToScrape as totalPostsToScrapeStorage,
 } from "@/utils/storage";
 
+import { ScraperState } from "../types";
+
 const queryCurrentTabId = async (): Promise<number | undefined> => {
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   return tab.id;
@@ -36,19 +38,19 @@ const initializeScraperState = async (
 const handleScrapedPostCountChange = async (
   newValue: number,
   setScrapedPostCount: (value: number) => void,
-  setIsScraping: (value: boolean) => void,
+  setScraperState: (value: ScraperState) => void,
 ) => {
   setScrapedPostCount(newValue);
 
   const totalPostsToScrapeValue = await totalPostsToScrapeStorage.getValue();
   if (newValue === totalPostsToScrapeValue) {
-    setIsScraping(false);
+    setScraperState(ScraperState.COMPLETED);
   }
 };
 
 export function useScraperState() {
+  const [scraperState, setScraperState] = useState(ScraperState.IDLE);
   const [totalPostsToScrape, setTotalPostsToScrapeState] = useState(0);
-  const [isScraping, setIsScraping] = useState(false);
   const [scrapedPostCount, setScrapedPostCount] = useState(0);
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export function useScraperState() {
         handleScrapedPostCountChange(
           newValue,
           setScrapedPostCount,
-          setIsScraping,
+          setScraperState,
         );
       },
     );
@@ -76,7 +78,7 @@ export function useScraperState() {
 
   const handleScrapeStart = async () => {
     try {
-      setIsScraping(true);
+      setScraperState(ScraperState.SCRAPING);
       await scrapedPostCountStorage.setValue(0);
 
       const tabId = await queryCurrentTabId();
@@ -107,7 +109,7 @@ export function useScraperState() {
   return {
     totalPostsToScrape,
     setTotalPostsToScrape,
-    isScraping,
+    scraperState,
     scrapedPostCount,
     handleScrapeStart,
   };

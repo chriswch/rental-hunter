@@ -8,12 +8,13 @@ import {
 } from "@heroui/react";
 
 import { useScraperState } from "../hooks/useScraperState";
+import { ScraperState } from "../types";
 
 export function ScraperTab() {
   const {
     totalPostsToScrape,
     setTotalPostsToScrape,
-    isScraping,
+    scraperState,
     scrapedPostCount,
     handleScrapeStart,
   } = useScraperState();
@@ -37,7 +38,7 @@ export function ScraperTab() {
             radius="sm"
           />
 
-          <>
+          {scraperState !== ScraperState.IDLE && (
             <Progress
               size="sm"
               radius="sm"
@@ -57,21 +58,18 @@ export function ScraperTab() {
                 maximumFractionDigits: 1,
               }}
             />
-            {/* <div className="text-xs text-default-500">
-              {scrapedPostCount} of {totalPostsToScrape} posts scraped
-            </div> */}
-          </>
+          )}
 
           <Button
             color="primary"
             className="w-full"
             size="sm"
             onPress={handleScrapeStart}
-            isLoading={isScraping}
-            isDisabled={isScraping}
+            isLoading={scraperState === ScraperState.SCRAPING}
+            isDisabled={scraperState === ScraperState.SCRAPING}
           >
             <div className="text-sm">
-              {isScraping
+              {scraperState === ScraperState.SCRAPING
                 ? `${scrapedPostCount} of ${totalPostsToScrape} posts scraped`
                 : "Start scraping"}
             </div>
