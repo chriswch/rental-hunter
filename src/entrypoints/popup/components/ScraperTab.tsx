@@ -4,14 +4,20 @@ import {
   CardBody,
   Form,
   NumberInput,
-  Spacer,
+  Progress,
 } from "@heroui/react";
 
 import { useScraperState } from "../hooks/useScraperState";
+import { ScraperState } from "../types";
 
 export function ScraperTab() {
-  const { numPosts, setNumPosts, isLoading, handleScrapeStart } =
-    useScraperState();
+  const {
+    totalPostsToScrape,
+    setTotalPostsToScrape,
+    scraperState,
+    scrapedPostCount,
+    handleScrapeStart,
+  } = useScraperState();
 
   return (
     <Card>
@@ -20,8 +26,8 @@ export function ScraperTab() {
           <NumberInput
             label="Number of Posts to Scrape"
             name="numPosts"
-            value={numPosts}
-            onValueChange={setNumPosts}
+            value={totalPostsToScrape}
+            onValueChange={setTotalPostsToScrape}
             isRequired
             min={1}
             max={100}
@@ -31,21 +37,44 @@ export function ScraperTab() {
             variant="bordered"
             radius="sm"
           />
+
+          {scraperState !== ScraperState.IDLE && (
+            <Progress
+              size="sm"
+              radius="sm"
+              className="max-w-md"
+              color="secondary"
+              classNames={{
+                track: "drop-shadow-md border border-default",
+                value: "text-foreground/60",
+              }}
+              label="Scraping Progress"
+              value={(scrapedPostCount / totalPostsToScrape) * 100}
+              showValueLabel={true}
+              formatOptions={{
+                style: "unit",
+                unit: "percent",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 1,
+              }}
+            />
+          )}
+
+          <Button
+            color="primary"
+            className="w-full"
+            size="sm"
+            onPress={handleScrapeStart}
+            isLoading={scraperState === ScraperState.SCRAPING}
+            isDisabled={scraperState === ScraperState.SCRAPING}
+          >
+            <div className="text-sm">
+              {scraperState === ScraperState.SCRAPING
+                ? `${scrapedPostCount} of ${totalPostsToScrape} posts scraped`
+                : "Start scraping"}
+            </div>
+          </Button>
         </Form>
-
-        <Spacer y={2} />
-
-        <Button
-          color="primary"
-          size="sm"
-          onPress={handleScrapeStart}
-          isLoading={isLoading}
-          isDisabled={isLoading}
-        >
-          <div className="text-sm">
-            {isLoading ? "Scraping..." : "Start scraping"}
-          </div>
-        </Button>
       </CardBody>
     </Card>
   );

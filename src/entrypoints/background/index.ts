@@ -1,10 +1,13 @@
 import { Message, MessageType, SavePostMessage } from "@/types/messages";
+import { scrapedPostCount as scrapePostCountStorage } from "@/utils/storage";
 
 import { savePostToNotion } from "./notion-saver";
 
 const handleSavePost = async (payload: SavePostMessage["payload"]) => {
-  console.log("Saving post:");
   await savePostToNotion(payload.post);
+
+  const currentCount = await scrapePostCountStorage.getValue();
+  await scrapePostCountStorage.setValue(currentCount + 1);
 };
 
 export default defineBackground(() => {
