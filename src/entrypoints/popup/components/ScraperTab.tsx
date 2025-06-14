@@ -4,6 +4,7 @@ import {
   CardBody,
   Form,
   NumberInput,
+  Progress,
   Spacer,
 } from "@heroui/react";
 
@@ -34,6 +35,32 @@ export function ScraperTab() {
         </Form>
 
         <Spacer y={2} />
+
+        <>
+          <Progress
+            size="sm"
+            radius="sm"
+            className="max-w-md"
+            color="secondary"
+            classNames={{
+              track: "drop-shadow-md border border-default",
+              value: "text-foreground/60",
+            }}
+            label="Scraping Progress"
+            value={(3 / numPosts) * 100}
+            showValueLabel={true}
+            formatOptions={{
+              style: "unit",
+              unit: "percent",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 1,
+            }}
+          />
+          <div className="text-xs text-default-500 mt-1">
+            {3} of {numPosts} posts scraped
+          </div>
+          <Spacer y={2} />
+        </>
 
         <Button
           color="primary"
