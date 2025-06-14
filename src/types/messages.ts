@@ -9,8 +9,6 @@ export enum MessageType {
   SAVE_POST = "SAVE_POST",
 
   // Content to Popup
-  SCRAPE_PROGRESS = "SCRAPE_PROGRESS",
-  SCRAPE_COMPLETED = "SCRAPE_COMPLETED",
 }
 
 // Base message interface
@@ -27,13 +25,6 @@ export interface StartScrapeMessage extends BaseMessage {
   };
 }
 
-export interface ScrapeProgressMessage extends BaseMessage {
-  type: MessageType.SCRAPE_PROGRESS;
-  payload: {
-    progress: number; // amount of posts scraped
-  };
-}
-
 export interface SavePostMessage extends BaseMessage {
   type: MessageType.SAVE_POST;
   payload: {
@@ -41,13 +32,5 @@ export interface SavePostMessage extends BaseMessage {
   };
 }
 
-export interface ScrapeCompletedMessage extends BaseMessage {
-  type: MessageType.SCRAPE_COMPLETED;
-}
-
 // Union type for all possible messages
-export type Message =
-  | StartScrapeMessage
-  | ScrapeProgressMessage
-  | SavePostMessage
-  | ScrapeCompletedMessage;
+export type Message = StartScrapeMessage | SavePostMessage;

@@ -12,6 +12,10 @@ export const notionDatabaseId = storage.defineItem<string>(
   },
 );
 
+export const geminiApiKey = storage.defineItem<string>("local:geminiApiKey", {
+  fallback: "",
+});
+
 /* Session storage items */
 
 export const totalPostsToScrape = storage.defineItem<number>(

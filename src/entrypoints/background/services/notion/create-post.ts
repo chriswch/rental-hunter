@@ -1,22 +1,6 @@
 import { Post } from "@/types/posts";
-import { notionApiKey, notionDatabaseId } from "@/utils/storage";
 
-const getApiKey = async () => {
-  return await notionApiKey.getValue();
-};
-
-const getDatabaseId = async () => {
-  return await notionDatabaseId.getValue();
-};
-
-const buildRequestHeaders = async () => {
-  const apiKey = await getApiKey();
-  return {
-    Authorization: `Bearer ${apiKey}`,
-    "Content-Type": "application/json",
-    "Notion-Version": "2022-06-28",
-  };
-};
+import { buildRequestHeaders, getDatabaseId } from "./base";
 
 const buildRequestBody = async (post: Post) => {
   const databaseId = await getDatabaseId();
@@ -45,7 +29,7 @@ const buildRequestBody = async (post: Post) => {
   };
 };
 
-export async function savePostToNotion(post: Post) {
+const createPost = async (post: Post) => {
   try {
     const baseUrl = "https://api.notion.com/v1";
     const headers = await buildRequestHeaders();
@@ -63,6 +47,8 @@ export async function savePostToNotion(post: Post) {
 
     return responseBody.id;
   } catch (error) {
-    console.error("Error saving fb posts to Notion:", error);
+    console.error("Error creating post to Notion:", error);
   }
-}
+};
+
+export default createPost;
