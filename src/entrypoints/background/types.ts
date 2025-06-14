@@ -15,5 +15,13 @@ interface AnalyzedRentalFields {
   nearby_mrt_stations: string[];
 }
 
+interface NotionRentalFields {
+  room_type: { name: string };
+  city: { name: string };
+  district: { name: string };
+  nearby_mrt_stations: { name: string }[];
+}
+
 export type AnalyzedRentalInfo = BaseRentalInfo & AnalyzedRentalFields;
 
+export type NotionRentalInfo = BaseRentalInfo & NotionRentalFields;
