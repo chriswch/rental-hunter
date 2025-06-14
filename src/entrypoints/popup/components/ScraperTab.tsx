@@ -5,15 +5,14 @@ import {
   Form,
   NumberInput,
   Progress,
-  Spacer,
 } from "@heroui/react";
 
 import { useScraperState } from "../hooks/useScraperState";
 
 export function ScraperTab() {
   const {
-    numPosts,
-    setNumPosts,
+    totalPostsToScrape,
+    setTotalPostsToScrape,
     isScraping,
     scrapedPostCount,
     handleScrapeStart,
@@ -26,8 +25,8 @@ export function ScraperTab() {
           <NumberInput
             label="Number of Posts to Scrape"
             name="numPosts"
-            value={numPosts}
-            onValueChange={setNumPosts}
+            value={totalPostsToScrape}
+            onValueChange={setTotalPostsToScrape}
             isRequired
             min={1}
             max={100}
@@ -37,47 +36,45 @@ export function ScraperTab() {
             variant="bordered"
             radius="sm"
           />
-        </Form>
 
-        <Spacer y={2} />
+          <>
+            <Progress
+              size="sm"
+              radius="sm"
+              className="max-w-md"
+              color="secondary"
+              classNames={{
+                track: "drop-shadow-md border border-default",
+                value: "text-foreground/60",
+              }}
+              label="Scraping Progress"
+              value={(scrapedPostCount / totalPostsToScrape) * 100}
+              showValueLabel={true}
+              formatOptions={{
+                style: "unit",
+                unit: "percent",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 1,
+              }}
+            />
+            <div className="text-xs text-default-500 mt-1">
+              {scrapedPostCount} of {totalPostsToScrape} posts scraped
+            </div>
+          </>
 
-        <>
-          <Progress
+          <Button
+            color="primary"
+            className="w-full"
             size="sm"
-            radius="sm"
-            className="max-w-md"
-            color="secondary"
-            classNames={{
-              track: "drop-shadow-md border border-default",
-              value: "text-foreground/60",
-            }}
-            label="Scraping Progress"
-            value={(scrapedPostCount / numPosts) * 100}
-            showValueLabel={true}
-            formatOptions={{
-              style: "unit",
-              unit: "percent",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 1,
-            }}
-          />
-          <div className="text-xs text-default-500 mt-1">
-            {scrapedPostCount} of {numPosts} posts scraped
-          </div>
-          <Spacer y={2} />
-        </>
-
-        <Button
-          color="primary"
-          size="sm"
-          onPress={handleScrapeStart}
-          isLoading={isScraping}
-          isDisabled={isScraping}
-        >
-          <div className="text-sm">
-            {isScraping ? "Scraping..." : "Start scraping"}
-          </div>
-        </Button>
+            onPress={handleScrapeStart}
+            isLoading={isScraping}
+            isDisabled={isScraping}
+          >
+            <div className="text-sm">
+              {isScraping ? "Scraping..." : "Start scraping"}
+            </div>
+          </Button>
+        </Form>
       </CardBody>
     </Card>
   );
