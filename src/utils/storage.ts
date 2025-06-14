@@ -14,6 +14,13 @@ export const notionDatabaseId = storage.defineItem<string>(
 
 /* Session storage items */
 
+export const totalPostsToScrape = storage.defineItem<number>(
+  "session:totalPostsToScrape",
+  {
+    fallback: 10,
+  },
+);
+
 export const scrapedPostCount = storage.defineItem<number>(
   "session:scrapedPostCount",
   {
