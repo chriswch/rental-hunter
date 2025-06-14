@@ -11,8 +11,13 @@ import {
 import { useScraperState } from "../hooks/useScraperState";
 
 export function ScraperTab() {
-  const { numPosts, setNumPosts, isLoading, handleScrapeStart } =
-    useScraperState();
+  const {
+    numPosts,
+    setNumPosts,
+    isScraping,
+    scrapedPostCount,
+    handleScrapeStart,
+  } = useScraperState();
 
   return (
     <Card>
@@ -47,7 +52,7 @@ export function ScraperTab() {
               value: "text-foreground/60",
             }}
             label="Scraping Progress"
-            value={(3 / numPosts) * 100}
+            value={(scrapedPostCount / numPosts) * 100}
             showValueLabel={true}
             formatOptions={{
               style: "unit",
@@ -57,7 +62,7 @@ export function ScraperTab() {
             }}
           />
           <div className="text-xs text-default-500 mt-1">
-            {3} of {numPosts} posts scraped
+            {scrapedPostCount} of {numPosts} posts scraped
           </div>
           <Spacer y={2} />
         </>
@@ -66,11 +71,11 @@ export function ScraperTab() {
           color="primary"
           size="sm"
           onPress={handleScrapeStart}
-          isLoading={isLoading}
-          isDisabled={isLoading}
+          isLoading={isScraping}
+          isDisabled={isScraping}
         >
           <div className="text-sm">
-            {isLoading ? "Scraping..." : "Start scraping"}
+            {isScraping ? "Scraping..." : "Start scraping"}
           </div>
         </Button>
       </CardBody>
