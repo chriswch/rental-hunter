@@ -21,28 +21,46 @@ const validateNotionSettings = async (): Promise<boolean> => {
   return !!notionApiKey && !!notionDatabaseId;
 };
 
+const initializeScraperState = async (
+  setTotalPostsToScrapeState: (value: number) => void,
+  setScrapedPostCount: (value: number) => void,
+) => {
+  const [totalPostsToScrape, scrapedPostCount] = await Promise.all([
+    totalPostsToScrapeStorage.getValue(),
+    scrapedPostCountStorage.getValue(),
+  ]);
+  setTotalPostsToScrapeState(totalPostsToScrape);
+  setScrapedPostCount(scrapedPostCount);
+};
+
+const handleScrapedPostCountChange = async (
+  newValue: number,
+  setScrapedPostCount: (value: number) => void,
+  setIsScraping: (value: boolean) => void,
+) => {
+  setScrapedPostCount(newValue);
+
+  const totalPostsToScrapeValue = await totalPostsToScrapeStorage.getValue();
+  if (newValue === totalPostsToScrapeValue) {
+    setIsScraping(false);
+  }
+};
+
 export function useScraperState() {
   const [totalPostsToScrape, setTotalPostsToScrapeState] = useState(0);
   const [isScraping, setIsScraping] = useState(false);
   const [scrapedPostCount, setScrapedPostCount] = useState(0);
 
   useEffect(() => {
-    totalPostsToScrapeStorage.getValue().then((value) => {
-      setTotalPostsToScrapeState(value);
-    });
-    scrapedPostCountStorage.getValue().then((value) => {
-      setScrapedPostCount(value);
-    });
+    initializeScraperState(setTotalPostsToScrapeState, setScrapedPostCount);
 
     const unsubscribeScrapedPostCount = scrapedPostCountStorage.watch(
       async (newValue) => {
-        setScrapedPostCount(newValue);
-        const totalPostsToScrapeValue =
-          await totalPostsToScrapeStorage.getValue();
-
-        if (newValue === totalPostsToScrapeValue) {
-          setIsScraping(false);
-        }
+        handleScrapedPostCountChange(
+          newValue,
+          setScrapedPostCount,
+          setIsScraping,
+        );
       },
     );
 
