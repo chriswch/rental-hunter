@@ -51,13 +51,6 @@ const savePost = (post: Post) => {
   browser.runtime.sendMessage(message);
 };
 
-const handleUpdateScrapeProgress = (
-  currentAmount: number,
-  maxAmount: number,
-) => {
-  console.log("Scraping progress:", currentAmount, "/", maxAmount);
-};
-
 // Main scraping function
 export const scrapePosts = async (maxPosts: number = 10) => {
   const posts: Post[] = [];
@@ -78,7 +71,6 @@ export const scrapePosts = async (maxPosts: number = 10) => {
         savePost(postData);
 
         posts.push(postData);
-        handleUpdateScrapeProgress(posts.length, maxPosts);
       }
     }
   } catch (error) {
