@@ -5,6 +5,7 @@ import {
   notionApiKey as notionApiKeyStorage,
   notionDatabaseId as notionDatabaseIdStorage,
   scrapedPostCount as scrapedPostCountStorage,
+  totalPostsToScrape as totalPostsToScrapeStorage,
 } from "@/utils/storage";
 
 const queryCurrentTabId = async (): Promise<number | undefined> => {
@@ -21,25 +22,39 @@ const validateNotionSettings = async (): Promise<boolean> => {
 };
 
 export function useScraperState() {
-  const [numPosts, setNumPosts] = useState(10);
+  const [totalPostsToScrape, setTotalPostsToScrapeState] = useState(0);
   const [isScraping, setIsScraping] = useState(false);
   const [scrapedPostCount, setScrapedPostCount] = useState(0);
 
   useEffect(() => {
+    totalPostsToScrapeStorage.getValue().then((value) => {
+      setTotalPostsToScrapeState(value);
+    });
     scrapedPostCountStorage.getValue().then((value) => {
       setScrapedPostCount(value);
     });
 
-    const unsubscribe = scrapedPostCountStorage.watch((newValue) => {
-      setScrapedPostCount(newValue);
+    const unsubscribeScrapedPostCount = scrapedPostCountStorage.watch(
+      async (newValue) => {
+        setScrapedPostCount(newValue);
+        const totalPostsToScrapeValue =
+          await totalPostsToScrapeStorage.getValue();
 
-      if (newValue === numPosts) {
-        setIsScraping(false);
-      }
-    });
+        if (newValue === totalPostsToScrapeValue) {
+          setIsScraping(false);
+        }
+      },
+    );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeScrapedPostCount();
+    };
   }, []);
+
+  const setTotalPostsToScrape = async (value: number) => {
+    setTotalPostsToScrapeState(value);
+    await totalPostsToScrapeStorage.setValue(value);
+  };
 
   const handleScrapeStart = async () => {
     try {
@@ -61,7 +76,7 @@ export function useScraperState() {
       const message: StartScrapeMessage = {
         type: MessageType.SCRAPE_START,
         payload: {
-          numPosts,
+          numPosts: totalPostsToScrape,
         },
       };
 
@@ -72,8 +87,8 @@ export function useScraperState() {
   };
 
   return {
-    numPosts,
-    setNumPosts,
+    totalPostsToScrape,
+    setTotalPostsToScrape,
     isScraping,
     scrapedPostCount,
     handleScrapeStart,
