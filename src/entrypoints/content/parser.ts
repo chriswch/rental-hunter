@@ -109,6 +109,7 @@ export const parsePostData = async (
       author,
       timestamp,
       image_urls,
+      price,
     };
   } catch (error) {
     console.error("Error extracting post data:", error);

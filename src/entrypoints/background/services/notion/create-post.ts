@@ -25,6 +25,9 @@ const buildRequestBody = async (post: Post) => {
           text: { content: url },
         })),
       },
+      price: {
+        number: post.price,
+      },
     },
   };
 };
