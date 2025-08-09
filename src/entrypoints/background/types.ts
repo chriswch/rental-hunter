@@ -1,5 +1,4 @@
 interface BaseRentalInfo {
-  monthly_rent?: number;
   floor_number?: number;
   electricity_fee_type?: string;
   electricity_rate?: number;

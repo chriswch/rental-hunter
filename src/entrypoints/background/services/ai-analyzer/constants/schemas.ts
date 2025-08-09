@@ -9,11 +9,6 @@ const rentalInfoSchema = {
       description:
         "房型類型：雅房（無廁所與衛浴）、套房（有浴室但不確定是否獨立）、分租套房（共用空間）、獨立套房（無共用空間）",
     },
-    monthly_rent: {
-      type: "integer",
-      minimum: 0,
-      description: "每月租金，以新台幣計價。不含水電、管理費等其他費用。",
-    },
     city: {
       type: "string",
       enum: ["台北市", "新北市"],
@@ -182,7 +177,7 @@ const rentalInfoSchema = {
       description: "是否為頂樓加蓋，true 表示是",
     },
   },
-  required: ["roomType", "monthlyRent", "city", "district"],
+  required: ["room_type", "city", "district"],
 };
 
 export { rentalInfoSchema };
