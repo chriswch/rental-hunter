@@ -5,4 +5,5 @@ export interface Post {
   author: string;
   timestamp: string;
   image_urls: string[];
+  price: number | null;
 }
