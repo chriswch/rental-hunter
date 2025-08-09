@@ -40,6 +40,26 @@ const parseContent = (postElement: HTMLElement) => {
   return contentPrefix + (messageElement?.textContent?.trim() || "");
 };
 
+const parsePrice = (postElement: HTMLElement): number | null => {
+  const container = postElement.querySelector(
+    'span[class="html-span xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs xtvhhri"]',
+  );
+  if (!container) return null;
+  
+  const div = container.querySelector('div');
+  if (!div) return null;
+
+  const first = div.firstChild;
+  if (first instanceof Text) {
+    const raw = first.data.trim();
+    if (raw.startsWith("NT$")) {
+      const price = raw.slice(3).trim().replace(/,/g, ""); // Removes all commas
+      return parseFloat(price);
+    }
+  }
+  return null;
+};
+
 // Extract post data from the element
 export const parsePostData = async (
   postElement: HTMLElement,
@@ -66,6 +86,9 @@ export const parsePostData = async (
 
     // Extract timestamp
     const timestamp = "";
+
+    // Extract price
+    const price = parsePrice(postElement);
 
     // Extract image links
     const image_urls: string[] = [];
