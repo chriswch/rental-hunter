@@ -33,11 +33,18 @@ const getPostElement = async (
   let postElement = getTargetPostElement(feedContainer, position);
 
   if (!postElement) {
+    console.log("Post element not found, scrolling to page end");
     await scrollToPageEnd();
     postElement = getTargetPostElement(feedContainer, position);
   }
 
-  return postElement as HTMLElement | null;
+  if (!postElement) {
+    console.log("Post element still not found");
+    return null;
+  } else {
+    console.log("Post element found");
+    return postElement as HTMLElement | null;
+  }
 };
 
 const savePost = (post: Post) => {
@@ -64,6 +71,7 @@ export const scrapePosts = async (maxPosts: number = 10) => {
     while (posts.length < maxPosts) {
       const nextPostElement = await getPostElement(posts.length + 1);
       if (!nextPostElement) {
+        console.log("No more posts found");
         break;
       }
       const postData = await parsePostData(nextPostElement);
