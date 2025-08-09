@@ -4,6 +4,9 @@ import type { Post } from "@/types/posts";
 import { scrollToPageEnd } from "./human-behavior";
 import { parsePostData } from "./parser";
 
+// Facebook post root element selector
+const POST_ROOT_SELECTOR = "div.x1yztbdb.x1n2onr6.xh8yej3.x1ja2u2z";
+
 const getFeedContainer = (): HTMLElement | null => {
   const feedContainer = document.querySelector('div[role="feed"]');
   if (!feedContainer) {
@@ -13,38 +16,10 @@ const getFeedContainer = (): HTMLElement | null => {
   return feedContainer as HTMLElement;
 };
 
-const getTargetPostElement = (
-  feedContainer: HTMLElement,
-  position: number,
-): HTMLElement | null => {
-  return feedContainer.querySelector(
-    `[aria-posinset="${position}"]`,
-  ) as HTMLElement | null;
-};
-
-const getPostElement = async (
-  position: number,
-): Promise<HTMLElement | null> => {
-  const feedContainer = getFeedContainer();
-  if (!feedContainer) {
-    return null;
-  }
-
-  let postElement = getTargetPostElement(feedContainer, position);
-
-  if (!postElement) {
-    console.log("Post element not found, scrolling to page end");
-    await scrollToPageEnd();
-    postElement = getTargetPostElement(feedContainer, position);
-  }
-
-  if (!postElement) {
-    console.log("Post element still not found");
-    return null;
-  } else {
-    console.log("Post element found");
-    return postElement as HTMLElement | null;
-  }
+const getPostElements = (feedContainer: HTMLElement): HTMLElement[] => {
+  return Array.from(
+    feedContainer.querySelectorAll(POST_ROOT_SELECTOR),
+  ) as HTMLElement[];
 };
 
 const savePost = (post: Post) => {
@@ -60,25 +35,38 @@ const savePost = (post: Post) => {
 
 // Main scraping function
 export const scrapePosts = async (maxPosts: number = 10) => {
-  const posts: Post[] = [];
-
   const feedContainer = getFeedContainer();
   if (!feedContainer) {
+    console.log("Feed container not found");
     return;
   }
 
   try {
-    while (posts.length < maxPosts) {
-      const nextPostElement = await getPostElement(posts.length + 1);
-      if (!nextPostElement) {
-        console.log("No more posts found");
-        break;
-      }
-      const postData = await parsePostData(nextPostElement);
-      if (postData) {
-        savePost(postData);
+    let savedPostsCount = 0;
+    let nextPostElementIndex = 0;
+    while (savedPostsCount < maxPosts) {
+      let currentPostElements = getPostElements(feedContainer);
 
-        posts.push(postData);
+      while (savedPostsCount < maxPosts) {
+        if (nextPostElementIndex === currentPostElements.length) {
+          console.log("Loading more posts");
+          await scrollToPageEnd();
+          currentPostElements = getPostElements(feedContainer);
+
+          if (nextPostElementIndex === currentPostElements.length) {
+            console.log("No more posts found");
+            return;
+          }
+        }
+
+        const nextPostElement = currentPostElements[nextPostElementIndex];
+        const postData = await parsePostData(nextPostElement);
+        if (postData) {
+          savePost(postData);
+          savedPostsCount += 1;
+        }
+
+        nextPostElementIndex += 1;
       }
     }
   } catch (error) {

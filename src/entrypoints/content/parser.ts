@@ -4,7 +4,7 @@ import { clickElement, scrollToPostElement } from "./human-behavior";
 
 // Check if the element is a post element
 export const isPostElement = (element: Element): boolean => {
-  return element.querySelector("[aria-posinset]") !== null;
+  return element.matches("div.x1yztbdb.x1n2onr6.xh8yej3.x1ja2u2z");
 };
 
 // Handle "Show more" button if present
