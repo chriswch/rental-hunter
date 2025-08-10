@@ -1,3 +1,5 @@
+import { notionApiKey, notionDatabaseId } from "@/utils/storage";
+
 export const baseUrl = "https://api.notion.com/v1";
 
 const getApiKey = async () => {
