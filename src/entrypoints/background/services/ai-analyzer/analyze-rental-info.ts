@@ -8,7 +8,18 @@ const parseJsonLoose = (raw: string): AnalyzedRentalInfo | null => {
   try {
     return JSON.parse(raw) as AnalyzedRentalInfo;
   } catch (e) {
-    console.error("Error parsing JSON:", e);
+    const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
+    const match = raw.match(jsonRegex);
+    if (match && match[1]) {
+      try {
+        return JSON.parse(match[1].trim()) as AnalyzedRentalInfo;
+      } catch (err) {
+        console.error("Error parsing fenced JSON:", err);
+        return null;
+      }
+    }
+
+    console.error("Error parsing JSON:", e, "raw:", raw);
     return null;
   }
 };
