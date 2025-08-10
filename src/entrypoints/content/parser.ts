@@ -1,10 +1,18 @@
 import { Post } from "@/types/posts";
 
 import { clickElement, scrollToPostElement } from "./human-behavior";
+import {
+  IMAGE_ANCHOR_SELECTOR,
+  POST_ROOT_SELECTOR,
+  PRICE_CONTAINER_SELECTOR,
+  PROFILE_NAME_SELECTOR,
+  STORY_MESSAGE_SELECTOR,
+  TRANSLATED_BLOCKQUOTE_SELECTOR,
+} from "./providers/facebook/selectors";
 
 // Check if the element is a post element
 export const isPostElement = (element: Element): boolean => {
-  return element.matches("div.x1yztbdb.x1n2onr6.xh8yej3.x1ja2u2z");
+  return element.matches(POST_ROOT_SELECTOR);
 };
 
 // Handle "Show more" button if present
@@ -25,25 +33,19 @@ const handleShowMoreButton = async (
 // Handle content parsing
 const parseContent = (postElement: HTMLElement) => {
   let contentPrefix = "";
-  let messageElement = postElement.querySelector(
-    'div[data-ad-rendering-role="story_message"]',
-  );
+  let messageElement = postElement.querySelector(STORY_MESSAGE_SELECTOR);
 
   // translated content
   if (!messageElement) {
     contentPrefix = "[TRANSLATED] ";
-    messageElement = postElement.querySelector(
-      'blockquote[class="html-blockquote xexx8yu x18d9i69 x12u81az x1t7ytsu x56jcm7 x14z9mp xieb3on x1gslohp xv54qhq xf7dkkf xyqm7xq"]',
-    );
+    messageElement = postElement.querySelector(TRANSLATED_BLOCKQUOTE_SELECTOR);
   }
 
   return contentPrefix + (messageElement?.textContent?.trim() || "");
 };
 
 const parsePrice = (postElement: HTMLElement): number | null => {
-  const container = postElement.querySelector(
-    'span[class="html-span xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x1hl2dhg x16tdsg8 x1vvkbs xtvhhri"]',
-  );
+  const container = postElement.querySelector(PRICE_CONTAINER_SELECTOR);
   if (!container) return null;
   
   const div = container.querySelector('div');
@@ -79,9 +81,7 @@ export const parsePostData = async (
     const content = parseContent(postElement);
 
     // Extract author
-    const authorElement = postElement.querySelector(
-      'div[data-ad-rendering-role="profile_name"]',
-    );
+    const authorElement = postElement.querySelector(PROFILE_NAME_SELECTOR);
     const author = authorElement?.textContent?.trim() || "";
 
     // Extract timestamp
@@ -92,9 +92,7 @@ export const parsePostData = async (
 
     // Extract image links
     const image_urls: string[] = [];
-    const imageAnchors = postElement.querySelectorAll(
-      "a[aria-label][attributionsrc]",
-    );
+    const imageAnchors = postElement.querySelectorAll(IMAGE_ANCHOR_SELECTOR);
     imageAnchors.forEach((anchor) => {
       const img = anchor.querySelector("img");
       if (img && img.src) {
