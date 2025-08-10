@@ -6,25 +6,31 @@ const randomDelay = async (min: number, max: number) => {
 };
 
 export const scrollToPostElement = async (element: HTMLElement) => {
-  console.log("Scrolling to element:", element);
+  console.log("Scrolling to target post element");
 
   element.scrollIntoView({ behavior: "smooth", block: "center" });
   await randomDelay(500, 800);
 };
 
 export const scrollToPageEnd = async () => {
+  console.log("Scrolling to page end");
+
   const scrollHeight = document.documentElement.scrollHeight;
   window.scrollTo(0, scrollHeight);
   await randomDelay(1000, 2000);
 };
 
 export const clickElement = async (element: HTMLElement) => {
+  console.log("Clicking element");
+
   element.click();
   await randomDelay(1000, 2000); // Wait a bit to take effect
 };
 
 export const expandPostIfCollapsed = async (postElement: HTMLElement) => {
-  const buttons = Array.from(postElement.querySelectorAll('div[role="button"]'));
+  const buttons = Array.from(
+    postElement.querySelectorAll('div[role="button"]'),
+  );
   for (const button of buttons) {
     const text = button.textContent?.trim();
     if (!text) continue;
