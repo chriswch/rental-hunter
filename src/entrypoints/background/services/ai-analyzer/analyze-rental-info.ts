@@ -4,28 +4,11 @@ import { geminiApiKey as geminiApiKeyStorage } from "@/utils/storage";
 import { AnalyzedRentalInfo } from "../../types";
 import { rentalInfoSystemPrompt } from "./constants/prompts";
 
-const readJsonFromMarkdown = (
-  markdownContent: string,
-): AnalyzedRentalInfo | null => {
-  // Regular expression to find JSON blocks
-  const jsonRegex = /```json\s*([\s\S]*?)\s*```/;
-  const match = markdownContent.match(jsonRegex);
-
-  if (match && match[1]) {
-    try {
-      // Extract and parse the JSON string
-      const jsonString = match[1].trim();
-      const jsonData: AnalyzedRentalInfo = JSON.parse(jsonString);
-
-      console.log("Parsed JSON:", jsonData);
-
-      return jsonData;
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      return null;
-    }
-  } else {
-    console.error("No JSON block found in Markdown.");
+const parseJsonLoose = (raw: string): AnalyzedRentalInfo | null => {
+  try {
+    return JSON.parse(raw) as AnalyzedRentalInfo;
+  } catch (e) {
+    console.error("Error parsing JSON:", e);
     return null;
   }
 };
@@ -42,7 +25,7 @@ const setDefaultRentalInfo = (
 };
 
 const parseRentalInfo = (content: string): AnalyzedRentalInfo | null => {
-  const rentalInfo = readJsonFromMarkdown(content);
+  const rentalInfo = parseJsonLoose(content);
   if (rentalInfo) {
     return setDefaultRentalInfo(rentalInfo);
   }
@@ -98,7 +81,5 @@ export const analyzeRentalInfo = async (
 
   const content = await geminiAnalyze(geminiApiKey, post);
   const rentalInfo = parseRentalInfo(content);
-  if (rentalInfo) {
-    return rentalInfo;
-  }
+  if (rentalInfo) return rentalInfo;
 };
