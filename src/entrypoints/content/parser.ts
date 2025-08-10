@@ -1,6 +1,6 @@
 import { Post } from "@/types/posts";
 
-import { clickElement, scrollToPostElement } from "./human-behavior";
+import { expandPostIfCollapsed, scrollToPostElement } from "./human-behavior";
 import {
   IMAGE_ANCHOR_SELECTOR,
   POST_ROOT_SELECTOR,
@@ -16,18 +16,8 @@ export const isPostElement = (element: Element): boolean => {
 };
 
 // Handle "Show more" button if present
-const handleShowMoreButton = async (
-  postElement: HTMLElement,
-): Promise<void> => {
-  const buttons = Array.from(
-    postElement.querySelectorAll('div[role="button"]'),
-  );
-  for (const button of buttons) {
-    if (button.textContent?.trim() === "查看更多") {
-      await clickElement(button as HTMLElement);
-      break;
-    }
-  }
+const handleShowMoreButton = async (postElement: HTMLElement): Promise<void> => {
+  await expandPostIfCollapsed(postElement);
 };
 
 // Handle content parsing

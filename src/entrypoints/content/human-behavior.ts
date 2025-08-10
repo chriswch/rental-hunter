@@ -22,3 +22,16 @@ export const clickElement = async (element: HTMLElement) => {
   element.click();
   await randomDelay(1000, 2000); // Wait a bit to take effect
 };
+
+export const expandPostIfCollapsed = async (postElement: HTMLElement) => {
+  const buttons = Array.from(postElement.querySelectorAll('div[role="button"]'));
+  for (const button of buttons) {
+    const text = button.textContent?.trim();
+    if (!text) continue;
+    // Handle common "Show more" texts (Chinese UI currently used)
+    if (text === "查看更多" || text.toLowerCase().includes("show more")) {
+      await clickElement(button as HTMLElement);
+      break;
+    }
+  }
+};
