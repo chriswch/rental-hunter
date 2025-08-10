@@ -1,6 +1,6 @@
 import { Post } from "@/types/posts";
 
-import { buildRequestHeaders, getDatabaseId } from "./base";
+import { baseUrl, buildRequestHeaders, getDatabaseId } from "./base";
 
 const buildRequestBody = async (post: Post) => {
   const databaseId = await getDatabaseId();
@@ -34,7 +34,6 @@ const buildRequestBody = async (post: Post) => {
 
 const createPost = async (post: Post) => {
   try {
-    const baseUrl = "https://api.notion.com/v1";
     const headers = await buildRequestHeaders();
     const body = await buildRequestBody(post);
 

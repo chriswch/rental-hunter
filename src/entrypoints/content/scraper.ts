@@ -3,12 +3,13 @@ import type { Post } from "@/types/posts";
 
 import { scrollToPageEnd } from "./human-behavior";
 import { parsePostData } from "./parser";
-
-// Facebook post root element selector
-const POST_ROOT_SELECTOR = "div.x1yztbdb.x1n2onr6.xh8yej3.x1ja2u2z";
+import {
+  FEED_CONTAINER_SELECTOR,
+  POST_ROOT_SELECTOR,
+} from "./providers/facebook/selectors";
 
 const getFeedContainer = (): HTMLElement | null => {
-  const feedContainer = document.querySelector('div[role="feed"]');
+  const feedContainer = document.querySelector(FEED_CONTAINER_SELECTOR);
   if (!feedContainer) {
     console.log("Feed container not found");
     return null;
