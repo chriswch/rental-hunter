@@ -75,10 +75,15 @@ const geminiAnalyze = async (apiKey: string, post: Post) => {
   });
 
   const data = await response.json();
-  const content = data.candidates[0].content.parts[0].text;
-  console.log("Gemini response content:", content);
+  try {
+    const content = data.candidates[0].content.parts[0].text;
+    console.log("Gemini response content:", content);
 
-  return content;
+    return content;
+  } catch (e) {
+    console.error("Error parsing Gemini response:", e, "data:", data);
+    return null;
+  }
 };
 
 export const analyzeRentalInfo = async (
@@ -91,6 +96,8 @@ export const analyzeRentalInfo = async (
   }
 
   const content = await geminiAnalyze(geminiApiKey, post);
+  if (!content) return;
+
   const rentalInfo = parseRentalInfo(content);
   if (rentalInfo) return rentalInfo;
 };
